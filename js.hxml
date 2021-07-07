@@ -1,0 +1,5 @@
+main.hxml
+-main Main
+-debug
+-js target/web/hello.js
+

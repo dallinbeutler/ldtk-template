@@ -1,0 +1,5 @@
+-cp src
+-lib heaps
+-lib ldtk-haxe-api
+-lib deepnightLibs
+# -D resourcesPath=assets

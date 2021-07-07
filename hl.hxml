@@ -1,0 +1,7 @@
+
+main.hxml
+-lib hlsdl
+
+#--dce full
+-main Main
+-hl target/hl/client.hl 
