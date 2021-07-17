@@ -12,3 +12,5 @@ hx3compat: [1.0.3] git
 hxbit: [1.5.0] git
 hxnodejs: [12.1.0] git
 ldtk-haxe-api: [0.9.3-rc.1]```
+
+- hl 1.11.0

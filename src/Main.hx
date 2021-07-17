@@ -24,7 +24,7 @@ class Main extends hxd.App {
 
         
         var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
-        tf.text = "Hello World !";
+        tf.text = "Hello Worlds!";
     }
 
     static function main() {
