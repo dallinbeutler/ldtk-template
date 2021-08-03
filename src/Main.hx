@@ -1,33 +1,68 @@
+import h3d.col.Bounds;
+import h3d.Camera;
+import h3d.prim.Cube;
+import h3d.scene.Graphics;
+import h2d.Flow;
+import h2d.col.Ray;
+import scene.Components.ContainerComp;
+import h2d.domkit.BaseComponents.DrawableComp;
+import dn.heaps.Scaler;
 import assets.MyProject;
-class Main extends hxd.App {
 
+class Main extends hxd.App {
+    var style:h2d.domkit.Style = null;
+    var alignment = null;
     override function init() {
         super.init();
-        hxd.Res.initEmbed();
-		s2d.setScale( dn.heaps.Scaler.bestFit_i(256,256) ); // scale view to fit
-
         var p = new MyProject();
-        var layer = p.all_levels.Level_0.l_IntGrid;
         var g = new h2d.Graphics(s2d);
+        alignment = new Flow(s2d);
+        alignment.horizontalAlign = Left;
+        alignment.verticalAlign = Top;
 
-        g.beginFill(p.bgColor_int);
-        g.drawRect(0,0, layer.cWid * layer.gridSize, layer.cHei * layer.gridSize);
-        g.endFill();
 
-        for(cx in 0...layer.cWid)
-            for(cy in 0...layer.cHei){
-                var color = layer.getColorInt(cx,cy);
-                if (color == null) continue;
-                g.beginFill(color);
-                g.drawRect(cx * layer.gridSize, cy * layer.gridSize, layer.gridSize, layer.gridSize);
-            }
-
+        var root = new scene.ContainerComp(Right,alignment);
         
-        var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
-        tf.text = "Hello Worlds!";
+        // var g3 = new h3d.scene.Graphics(s3d);
+        var cube = new Cube();
+        var m = new h3d.scene.Mesh(cube, s3d);
+        s3d.addChild(m);
+        
+        style = new h2d.domkit.Style();
+		style.load(hxd.Res.style);
+		style.addObject(root);
+
+
+        hxd.Res.props.watch(initCamera);
+        initCamera();
+
+        // var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
+        // tf.text = "Hello Worlds!";
+    }
+    function initCamera(){
+        var cam = new Camera();
+        var startup:haxe.DynamicAccess<Float> = haxe.Json.parse(hxd.Res.props.entry);
+        hxd.res.Resource
+        cam.orthoBounds = Bounds.fromValues(startup["x"], -5.0,-5.0, 0,5,5,100);
+        s3d.camera = cam;
+    }
+
+    override function onResize() {
+		alignment.minWidth = alignment.maxWidth = s2d.width;
+		alignment.minHeight = alignment.maxHeight = s2d.height;
+	}
+
+    override function update(dt:Float){
+        style.sync();
     }
 
     static function main() {
+        #if hl
+		hxd.res.Resource.LIVE_UPDATE = true;
+		hxd.Res.initLocal();
+		#else
+		hxd.Res.initEmbed();
+		#end
         new Main();
     }
 }

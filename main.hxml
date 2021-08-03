@@ -1,5 +1,7 @@
 -cp src
 -lib heaps
+-lib domkit
 -lib ldtk-haxe-api
 -lib deepnightLibs
+
 # -D resourcesPath=assets
