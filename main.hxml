@@ -1,5 +1,6 @@
 -cp src
 -lib heaps
+-lib castle
 -lib domkit
 -lib ldtk-haxe-api
 -lib deepnightLibs

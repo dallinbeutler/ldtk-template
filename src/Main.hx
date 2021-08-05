@@ -4,14 +4,14 @@ import h3d.prim.Cube;
 import h3d.scene.Graphics;
 import h2d.Flow;
 import h2d.col.Ray;
-import scene.Components.ContainerComp;
+import scene.ContainerComp;
 import h2d.domkit.BaseComponents.DrawableComp;
 import dn.heaps.Scaler;
 import assets.MyProject;
 
 class Main extends hxd.App {
     var style:h2d.domkit.Style = null;
-    var alignment = null;
+    var alignment:Flow = null;
     override function init() {
         super.init();
         var p = new MyProject();
@@ -33,17 +33,17 @@ class Main extends hxd.App {
 		style.addObject(root);
 
 
-        hxd.Res.props.watch(initCamera);
-        initCamera();
+        // hxd.Res.props.watch(initCamera);
+        // initCamera();
 
         // var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
         // tf.text = "Hello Worlds!";
     }
     function initCamera(){
         var cam = new Camera();
-        var startup:haxe.DynamicAccess<Float> = haxe.Json.parse(hxd.Res.props.entry);
-        hxd.res.Resource
-        cam.orthoBounds = Bounds.fromValues(startup["x"], -5.0,-5.0, 0,5,5,100);
+        // var startup:haxe.DynamicAccess<Float> = haxe.Json.parse(hxd.Res.props.entry);
+        
+        cam.orthoBounds = Bounds.fromValues( -5.0,-5.0, 0,5,5,100);
         s3d.camera = cam;
     }
 
