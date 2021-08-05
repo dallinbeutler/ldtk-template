@@ -1,3 +1,4 @@
+import h3d.scene.Mesh;
 import h3d.col.Bounds;
 import h3d.Camera;
 import h3d.prim.Cube;
@@ -7,14 +8,14 @@ import h2d.col.Ray;
 import scene.ContainerComp;
 import h2d.domkit.BaseComponents.DrawableComp;
 import dn.heaps.Scaler;
-import assets.MyProject;
+// import assets.MyProject;
 
 class Main extends hxd.App {
     var style:h2d.domkit.Style = null;
     var alignment:Flow = null;
     override function init() {
         super.init();
-        var p = new MyProject();
+        // var p = new MyProject();
         var g = new h2d.Graphics(s2d);
         alignment = new Flow(s2d);
         alignment.horizontalAlign = Left;
@@ -38,6 +39,13 @@ class Main extends hxd.App {
 
         // var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
         // tf.text = "Hello Worlds!";
+        new h3d.scene.CameraController(s3d).loadFromCamera();
+        var grid = new h3d.prim.Grid(8,8,1,1);
+        var gridMesh = new Mesh( grid);
+        
+        gridMesh.setPosition(-64,-64,0);
+        gridMesh.material.mainPass.wireframe = true;
+        s3d.addChild(gridMesh);
     }
     function initCamera(){
         var cam = new Camera();
