@@ -1,3 +1,4 @@
+import MouseStuff.MouseHelper;
 import h3d.scene.Mesh;
 import h3d.col.Bounds;
 import h3d.Camera;
@@ -42,9 +43,10 @@ class Main extends hxd.App {
         new h3d.scene.CameraController(s3d).loadFromCamera();
         var grid = new h3d.prim.Grid(8,8,1,1);
         var gridMesh = new Mesh( grid);
+        MouseHelper.initInteract(s3d,gridMesh);
         
-        gridMesh.setPosition(-64,-64,0);
-        gridMesh.material.mainPass.wireframe = true;
+        gridMesh.setPosition(-4,-4,0);
+        // gridMesh.material.mainPass.wireframe = true;
         s3d.addChild(gridMesh);
     }
     function initCamera(){
