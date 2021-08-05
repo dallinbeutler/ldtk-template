@@ -72,7 +72,8 @@
 /haxe.sublime*
 .idea
 build.bat
-/.vscode
+# /.vscode
+/target
 tests/unit/compile.php.hxml
 /extra/*.xml
 !/extra/build-haxesetup.xml
