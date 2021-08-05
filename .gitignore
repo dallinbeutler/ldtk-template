@@ -102,7 +102,7 @@ tests/misc/projects/Issue4070/cpp/
 /tests/misc/eventLoop/dump
 /tests/misc/eventLoop/eventLoop.py
 /tests/misc/eventLoop/php
-*.vscode/
+# *.vscode/
 
 /tests/sys/temp
 /tests/sys/temp-unicode
