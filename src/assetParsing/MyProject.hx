@@ -1,3 +1,3 @@
-package assets;
+package assetParsing;
 private typedef _Tmp =
     haxe.macro.MacroType<[ ldtk.Project.build("res/ldtk/World1.ldtk") ]>;

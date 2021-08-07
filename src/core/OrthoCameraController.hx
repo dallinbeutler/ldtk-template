@@ -199,21 +199,25 @@ class OrthoCameraController extends h3d.scene.Object {
 			targetOffset.w = 1;
 	}
 
-	function zoom(delta) {
+	function zoom(delta:Float) {
 		// targetPos.x *= Math.pow(zoomAmount, delta);
 
-        var change = Math.pow(zoomAmount, delta);
-        scene.camera.orthoBounds.xSize *= change;
-        scene.camera.orthoBounds.ySize *= change;
+        var change = Math.pow(zoomAmount, - delta);
+		// scene.scaleX *= change;
+		// scene.scaleY *= change;
+		scene.scale(change);
+        // scene.camera.orthoBounds.xSize *= change;
+        // scene.camera.orthoBounds.ySize *= change;
 	}
 
 	function rot(dx, dy) {
 		moveX += dx;
-		moveY += dy;
+		// moveY += dy;
+		
 	}
-
-	function pan(dx, dy) {
-		var v = new h3d.Vector(dx, dy);
+	var panAmount =.1;
+	function pan(dx:Float, dy:Float) {
+		var v = new h3d.Vector( 1/zoomAmount*dx * panAmount, (1/zoomAmount*dy)* panAmount) ;
 		scene.camera.update();
 		v.transform3x3(scene.camera.getInverseView());
 		v.w = 0;
@@ -225,7 +229,7 @@ class OrthoCameraController extends h3d.scene.Object {
 		var distance = distance;
 		cam.target.load(curOffset);
 		cam.target.w = 1;
-		cam.pos.set( distance * Math.cos(theta) * Math.sin(phi) + cam.target.x, distance * Math.sin(theta) * Math.sin(phi) + cam.target.y, distance * Math.cos(phi) + cam.target.z );
+		cam.pos.set( distance * Math.cos(theta) * Math.sin(phi) + (cam.target.x + zoomAmount), distance * Math.sin(theta) * Math.sin(phi) + (cam.target.y + zoomAmount), distance * Math.cos(phi) + cam.target.z );
 		if( !lockZPlanes ) {
 			cam.zNear = distance * 0.01;
 			cam.zFar = distance * 100;

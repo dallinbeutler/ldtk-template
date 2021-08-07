@@ -1,7 +1,7 @@
 
 main.hxml
 -lib hlsdl
-
+-D windowSize=1680x1050
 #--dce full
 -main Main
 -hl target/hl/client.hl 
