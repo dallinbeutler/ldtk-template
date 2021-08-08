@@ -1,3 +1,5 @@
+import h3d.pass.DirShadowMap;
+import h3d.col.Plane;
 import h3d.prim.Grid;
 import h3d.mat.RenderTarget;
 import dn.Color;
@@ -50,9 +52,24 @@ class Main extends hxd.App {
         var root = new scene.ContainerComp(Right,alignment);
         
         //lighting
+        
         s3d.lightSystem.ambientLight.set(0.5, 0.5, 0.5);
-        var directionalLight = new h3d.scene.fwd.DirLight(new h3d.Vector(-0.3, -0.2, -1), s3d);
+
+        var shadow = s3d.renderer.getPass(DirShadowMap);
+        //Increasing the amount of passes increases the amount of blur applied to the shadow
+        
+        // shadow.bias = .001;
+        // shadow.blur.quality = 4;
+        // shadow.samplingKind = PCF;
+        // shadow.pcfQuality = 10;
+
+        // s3d.lightSystem.shadowLight = 
+        // .color.set(.2,.2,.2,1.0);
+        var directionalLight = new h3d.scene.fwd.DirLight(new h3d.Vector(-0.3, 0.2, -1), s3d);
+        
+        
         directionalLight.enableSpecular = true;
+        
 
 
         // var g3 = new h3d.scene.Graphics(s3d);
@@ -60,31 +77,43 @@ class Main extends hxd.App {
         
         cube.addUVs();
         cube.addNormals();
-        var m = new h3d.scene.Mesh(cube, s3d);
         
+        var m = new h3d.scene.Mesh(cube, s3d);
+
+        // m.material.mainPass.enableLights = true;
+        // m.material.shadows = true;
+        
+        // m.material.castShadows = true;
+        // m.material.receiveShadows= true;
+        m.material.color.setColor(Std.random(0x1000000));
+
         s3d.addChild(m);
         
         style = new h2d.domkit.Style();
 		style.load(hxd.Res.style);
 		style.addObject(root);
 
+       
+        // s3d.camera.orthoBounds = Bounds.fromValues( -width,-height, 0,width,height,5000);
+        s3d.camera.pos.add(new h3d.Vector(5.0,5.0,0.0));
         var total = s2d.width + s2d.height;
         var width = s2d.width *2/ total;
         var height = s2d.height *2/ total;
         // hxd.Res.props.watch(initCamera);
         s3d.camera.orthoBounds = Bounds.fromValues( -width,-height, 0,width,height,5000);
-        // s3d.camera.orthoBounds = Bounds.fromValues( -width,-height, 0,width,height,5000);
-        s3d.camera.pos.add(new h3d.Vector(5.0,5.0,0.0));
-        fixOrtho();
+        // s3d.camera.fovY = 0.01;
+        // s3d.camera.setFovX(
+
 
         // var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
         // tf.text = "Hello Worlds!";
         
         new core.OrthoCameraController(m).loadFromCamera();
-        var plane = new h3d.prim.Grid(1,1,4,4);
-        // plane.render()
+        var plane = new h3d.prim.Grid(4,4,1,1);
+        // plane.render()        
         plane.addNormals();
         var planeMesh = new Mesh( plane);
+        planeMesh.setPosition(-2,-2,0);
         var rt = new RenderTarget();        
 
         MouseHelper.initInteract(s3d,planeMesh);
@@ -92,14 +121,6 @@ class Main extends hxd.App {
     }
     
     var scale = 20*2;//since we sub and add from center
-    function fixOrtho(){
-        // var startup:haxe.DynamicAccess<Float> = haxe.Json.parse(hxd.Res.props.entry);
-
-        
-        s3d.camera.update();
-        // s3d.z.zoom
-
-    }
 
     function renderMap(){
         s2d.setScale( dn.heaps.Scaler.bestFit_i(256,256) ); // scale view to fit
@@ -125,7 +146,7 @@ class Main extends hxd.App {
     override function onResize() {
 		alignment.minWidth = alignment.maxWidth = s2d.width;
 		alignment.minHeight = alignment.maxHeight = s2d.height;
-        fixOrtho();
+        s3d.camera.screenRatio = s2d.height/s2d.width;
 	}
 
     override function update(dt:Float){

@@ -1,5 +1,8 @@
 package core;
 
+import h3d.Vector;
+import h2d.col.Matrix;
+import hxd.Math;
 import h3d.scene.*;
 
 class OrthoCameraController extends h3d.scene.Object {
@@ -198,26 +201,35 @@ class OrthoCameraController extends h3d.scene.Object {
 		if( targetOffset.w < 1 )
 			targetOffset.w = 1;
 	}
-
+	var orthoScale = .2;
 	function zoom(delta:Float) {
 		// targetPos.x *= Math.pow(zoomAmount, delta);
 
-        var change = Math.pow(zoomAmount, - delta);
-		// scene.scaleX *= change;
-		// scene.scaleY *= change;
-		scene.scale(change);
-        // scene.camera.orthoBounds.xSize *= change;
+        var change = Math.pow(zoomAmount, delta);		
+
+		// scene.scale(change);
+        // var shrinkagex  = (scene.camera.orthoBounds.xSize *(1-change))*.5;
+        // var shrinkagey = scene.camera.orthoBounds.ySize *(1-change)*.5;
+		// scene.camera.orthoBounds.xMin + shrinkagex;
+		// scene.camera.orthoBounds.xMax - shrinkagey;
+		// scene.camera.orthoBounds.yMin + shrinkagey;
+		// scene.camera.orthoBounds.yMax - shrinkagey;
+		// scene.camera.viewX += 1-change;
+		// scene.camera.viewY += 1-zzzzchange;
+		// scene.camera.m.scale(change);
+		scene.camera.orthoBounds.scaleCenter(change);
+		orthoScale *= change;
+		// scene.camera.orthoBounds.xSize *= change;
         // scene.camera.orthoBounds.ySize *= change;
 	}
 
-	function rot(dx, dy) {
-		moveX += dx;
-		// moveY += dy;
+	function rot(dx:Float, dy:Float) {
+		moveX -= dx;
+		moveY += dy;
 		
 	}
-	var panAmount =.1;
 	function pan(dx:Float, dy:Float) {
-		var v = new h3d.Vector( 1/zoomAmount*dx * panAmount, (1/zoomAmount*dy)* panAmount) ;
+		var v = new h3d.Vector( dx *orthoScale, dy *orthoScale) ;
 		scene.camera.update();
 		v.transform3x3(scene.camera.getInverseView());
 		v.w = 0;
@@ -249,9 +261,18 @@ class OrthoCameraController extends h3d.scene.Object {
 		}
 
 		if( moveX != 0 ) {
-			targetPos.y += moveX * 0.003 * rotateSpeed;
+		
+			targetPos.y -= moveX * 0.003 * rotateSpeed;
+			// var E = 2e-5;
+			// var bound = Math.PI - E;
+			// if( targetPos.y < E ) targetPos.y = E;
+			// if( targetPos.y > bound ) targetPos.y = bound;
 			moveX *= 1 - friction;
 			if( Math.abs(moveX) < 1 ) moveX = 0;
+			
+			// targetPos.y += moveX * 0.003 * rotateSpeed;
+			// moveX *= 1 - friction;
+			// if( Math.abs(moveX) < 1 ) moveX = 0;
 		}
 
 		if( moveY != 0 ) {
