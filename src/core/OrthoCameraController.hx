@@ -201,32 +201,18 @@ class OrthoCameraController extends h3d.scene.Object {
 		if( targetOffset.w < 1 )
 			targetOffset.w = 1;
 	}
-	var orthoScale = .2;
+	//used for panning speed adjustments
+	var orthoScale = .1;
 	function zoom(delta:Float) {
-		// targetPos.x *= Math.pow(zoomAmount, delta);
-
         var change = Math.pow(zoomAmount, delta);		
 
-		// scene.scale(change);
-        // var shrinkagex  = (scene.camera.orthoBounds.xSize *(1-change))*.5;
-        // var shrinkagey = scene.camera.orthoBounds.ySize *(1-change)*.5;
-		// scene.camera.orthoBounds.xMin + shrinkagex;
-		// scene.camera.orthoBounds.xMax - shrinkagey;
-		// scene.camera.orthoBounds.yMin + shrinkagey;
-		// scene.camera.orthoBounds.yMax - shrinkagey;
-		// scene.camera.viewX += 1-change;
-		// scene.camera.viewY += 1-zzzzchange;
-		// scene.camera.m.scale(change);
 		scene.camera.orthoBounds.scaleCenter(change);
 		orthoScale *= change;
-		// scene.camera.orthoBounds.xSize *= change;
-        // scene.camera.orthoBounds.ySize *= change;
 	}
 
 	function rot(dx:Float, dy:Float) {
 		moveX -= dx;
 		moveY += dy;
-		
 	}
 	function pan(dx:Float, dy:Float) {
 		var v = new h3d.Vector( dx *orthoScale, dy *orthoScale) ;
