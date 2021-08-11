@@ -1,20 +1,13 @@
-import h3d.pass.DirShadowMap;
-import h3d.col.Plane;
+import core.debug.Gizmo;
+import core.debug.DrawAxes;
 import h3d.prim.Grid;
-import h3d.mat.RenderTarget;
-import dn.Color;
-import h3d.scene.Light;
 import MouseStuff.MouseHelper;
 import h3d.scene.Mesh;
 import h3d.col.Bounds;
-import h3d.Camera;
 import h3d.prim.Cube;
 import h3d.scene.Graphics;
 import h2d.Flow;
-import h2d.col.Ray;
 import scene.ContainerComp;
-import h2d.domkit.BaseComponents.DrawableComp;
-import dn.heaps.Scaler;
 import assetParsing.MyProject;
 
 class Main extends hxd.App {
@@ -26,11 +19,36 @@ class Main extends hxd.App {
         
         initLighting();
         initGUI();
-        initScene();
+        createPlane();
+        createCube();
         initCamera();
-        var topView = new h2d.Scene();
-        var rt = new RenderTarget();        
+        // var topView = new h2d.Scene();
+        // s2d.addChild(topView);
+        var g3 = new h3d.scene.Graphics(s3d);
+        // drawGizmo(g3,1,1,1);
+        drawGrid();
+        // var g = new h2d.Graphics(topView);
+        // g.beginFill(0xFF00FF,1);
+        // g.drawCircle(0,0, 500);
+        // g.endFill();
+        new Gizmo(s3d);
+
     }
+    function drawGrid(){
+        var gh = new core.debug.DrawGrid(s3d,10,10,0x444444,0x88888,6.0);
+        var ah = new core.debug.DrawAxes(s3d, 10,8 );        
+    }
+
+    // function drawGizmo(g :h3d.scene.Graphics,x,y,z ) {
+    //     g.setPosition(x,y,z);
+    //     g.lineStyle(10,0xFF0000);
+    //     g.drawLine(new Point(0,0,0),new Point(1,0,0));
+    //     g.lineStyle(10,0x00FF00);
+    //     g.drawLine(new Point(0,0,0),new Point(0,1,0));
+    //     g.lineStyle(10,0x0000FF);
+    //     g.drawLine(new Point(0,0,0),new Point(0,0,1));
+    //     g.setPosition(0,0,0);
+    // }
 
     function initCamera(){
         s3d.camera.pos.add(new h3d.Vector(5.0,5.0,0.0));
@@ -54,31 +72,58 @@ class Main extends hxd.App {
     }
 
     function initLighting(){
-        s3d.lightSystem.ambientLight.set(0.5, 0.5, 0.5);
+        // var ls = new h3d.scene.fwd.LightSystem();
+        // var ls = new h3d.scene.pbr.LightSystem();
+        
+		// var light = new h3d.scene.pbr.DirLight(s3d);
+		var light = new h3d.scene.fwd.DirLight(s3d);
+		light.setPosition(100 , 200, 100);
+		light.setDirection(new h3d.Vector(-1,-2,-1,1));
+		// light. = 10;
+        // light.shadows.mode = Dynamic;
+        // light.shadows.bias = 0.01;
+        // light.shadows.blur.radius = 0;
+        // light.shadows.pcfScale = .1;
+        // light.shadows.pcfQuality = 10;
+        // s3d.lightSystem = ls;
+		
+		s3d.camera.pos.set(10, 10, 10);
 
-        // set things such as bias
-        //var shadow = s3d.renderer.getPass(DirShadowMap);
-        var directionalLight = new h3d.scene.fwd.DirLight(new h3d.Vector(-0.3, 0.2, -1), s3d);
-        directionalLight.enableSpecular = true;
     }
-    function initScene() {
-        //add cube mesh
-        var cube = new Cube();
-        cube.addUVs();
-        cube.addNormals();
-        var m = new h3d.scene.Mesh(cube, s3d);
-        m.material.color.setColor(Std.random(0x1000000));
-        s3d.addChild(m);
+    
+    function createPlane() {
+		var prim = new Grid(1,1,1,1);
+		prim.translate(-.5, -.5, -0);
+		// prim.unindex();
+		prim.addNormals();
+		prim.addUVs();
+		var obj = new Mesh(prim, s3d);
+		obj.scaleX = 10;
+		obj.scaleY = 10;
+		obj.z = -0.01;
+		obj.material.color.setColor(0xffffff);
+		obj.material.mainPass.enableLights = true;
+		obj.material.receiveShadows = true;
+		// obj.material.mainPass.addShader(new h3d.shader.pbr.PropsValues(1, 0, 0));
+        
+        MouseHelper.initInteract(s3d,obj);
 
-        //add plane mesh
-        var plane = new h3d.prim.Grid(4,4,1,1);
-        plane.addNormals();
-        var planeMesh = new Mesh( plane);
-        planeMesh.setPosition(-2,-2,0);
-        // add interactivity
-        MouseHelper.initInteract(s3d,planeMesh);
-        s3d.addChild(planeMesh);
-    }
+		return obj;
+	}
+	
+	function createCube() {
+		var prim = new Cube();
+		// prim.translate(0,0, 0.5);
+		prim.unindex();
+		prim.addNormals();
+		prim.addUVs();
+		var obj = new Mesh(prim, s3d);
+		obj.material.color.setColor(0xff0000);
+		obj.material.shadows = true;
+		obj.material.mainPass.enableLights = true;
+		obj.material.mainPass.addShader(new h3d.shader.pbr.PropsValues(.5, .5, 0));
+		return obj;
+	}
 
     
     function renderMap(){

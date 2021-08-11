@@ -5,6 +5,7 @@ import h2d.col.Matrix;
 import hxd.Math;
 import h3d.scene.*;
 
+
 class OrthoCameraController extends h3d.scene.Object {
 
 	public var distance(get, never) : Float;
@@ -40,7 +41,8 @@ class OrthoCameraController extends h3d.scene.Object {
 		super(parent);
 		name = "CameraController";
 		set(distance);
-		flags.set(FNoSerialize,true);
+		//obsolete?
+		// flags.set(FNoSerialize,true);		
 		curPos.load(targetPos);
 		curOffset.load(targetOffset);
 	}
