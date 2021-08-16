@@ -72,7 +72,7 @@ class Gizmo extends h3d.scene.Graphics {
 		initInteract(new Vector(0,1,0), yHit, yHit.getCollider());
 		initInteract(new Vector(0,0,1), zHit, zHit.getCollider());
 
-        parent.addChild(gizmoModel);
+        this.addChild(gizmoModel);
 		// var obj = cast(modelCache.loadModel(hxd.Res.models.gizmo),HMDModel);
 		// obj.get
 
@@ -104,11 +104,13 @@ class Gizmo extends h3d.scene.Graphics {
 		var color = m.material.color.clone();
 		i.bestMatch = true;
 		var mouseDown = false;
+		var startingOffset:Vector = null;
 		i.onPush = function(e:hxd.Event) {
 			if (e.button == 0) {
 				mouseDown = true;
 				m.material.color.set(1, 1, 0);
 				e.propagate = false;
+				startingOffset = new Vector(e.relX,e.relY,e.relZ);
 			}
 		};
 		i.onRelease = function(e:hxd.Event) {
@@ -122,11 +124,21 @@ class Gizmo extends h3d.scene.Graphics {
 			m.material.color.set(color.r + .5,  color.g + .5, 0);
 		};
 		i.onMove = i.onCheck = function(e:hxd.Event) {
+			if (mouseDown){		
+				var mouseP = i.absPos.getPosition();
+				var offset = ((new Vector(e.relX,e.relY,e.relZ)).sub(startingOffset));			
+				offset = new Vector(offset.x * axis.x,offset.y * axis.y, offset.z * offset.z);
+				var currentPos = this.getTransform().getPosition();
+				this.setPosition(currentPos.x + offset.x,currentPos.y + offset.y,currentPos.z +offset.z);
+				startingOffset = new Vector(e.relX,e.relY,e.relZ);				
+			} 
 			//   if( beacon == null ) return;
 			//   beacon.x = e.relX;
 			//   beacon.y = e.relY;
 			//   beacon.z = e.relZ;
 		};
+		i.on
+
 		i.onOut = function(e:hxd.Event) {
 			if (!mouseDown)
 				m.material.color.load(color);
